@@ -1,0 +1,765 @@
+/*
+  ============================================================
+  Engineer's Atelier — Blueprint Workshop
+  ------------------------------------------------------------
+  Palette  : deep indigo blueprint (#0E2A47), tracing-paper ivory (#F5F1E8),
+             engineer-pen orange (#E8602C), caution yellow (#F2C14E)
+  Fonts    : Space Grotesk (display EN), Noto Serif TC (display ZH),
+             IBM Plex Sans TC (body), JetBrains Mono (numbers),
+             Caveat (hand-drawn red-pen notes)
+  Motifs   : blueprint grid, title blocks, FIG numbers, scale bars,
+             red-pen markups, washi tape, dimension leaders
+  Rule     : every visual decision must reinforce the drafting-room
+             metaphor — never dilute with generic SaaS patterns.
+  ============================================================
+*/
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Blueprint Workshop custom tokens */
+  --color-blueprint: var(--blueprint);
+  --color-blueprint-deep: var(--blueprint-deep);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-marker: var(--marker);
+  --color-tape: var(--tape);
+  --color-grid: var(--grid);
+
+  --font-display: "Space Grotesk", "Noto Serif TC", serif;
+  --font-serif: "Noto Serif TC", "Noto Serif", serif;
+  --font-sans: "IBM Plex Sans TC", "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", "Huninn", cursive;
+}
+
+:root {
+  /* Palette */
+  --blueprint: oklch(0.32 0.09 257);        /* #1E4272 — primary blueprint paper */
+  --blueprint-deep: oklch(0.24 0.08 260);   /* #0E2A47 — deep indigo */
+  --paper: oklch(0.955 0.022 85);           /* #F5F1E8 — tracing paper ivory */
+  --paper-deep: oklch(0.91 0.028 85);       /* aged draft paper */
+  --ink: oklch(0.22 0.015 80);              /* warm near-black for ink */
+  --marker: oklch(0.68 0.19 40);            /* #E8602C engineer's red-pen */
+  --tape: oklch(0.82 0.15 85);              /* #F2C14E washi tape */
+  --grid: oklch(0.85 0.02 85 / 0.55);       /* grid line on paper */
+
+  /* Default theme: tracing paper (light) */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: #ffffff;
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--blueprint-deep);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.9 0.02 85);
+  --muted-foreground: oklch(0.45 0.02 80);
+  --accent: var(--marker);
+  --accent-foreground: var(--paper);
+  --destructive: oklch(0.58 0.23 28);
+  --destructive-foreground: var(--paper);
+  --border: oklch(0.82 0.03 80);
+  --input: oklch(0.88 0.02 85);
+  --ring: var(--marker);
+
+  --chart-1: var(--marker);
+  --chart-2: var(--blueprint);
+  --chart-3: var(--tape);
+  --chart-4: var(--blueprint-deep);
+  --chart-5: oklch(0.5 0.04 80);
+
+  --sidebar: var(--blueprint-deep);
+  --sidebar-foreground: var(--paper);
+  --sidebar-primary: var(--marker);
+  --sidebar-primary-foreground: var(--paper);
+  --sidebar-accent: var(--blueprint);
+  --sidebar-accent-foreground: var(--paper);
+  --sidebar-border: oklch(1 0 0 / 0.15);
+  --sidebar-ring: var(--marker);
+
+  --radius: 0.15rem; /* sharp, draftsman corners */
+}
+
+.dark {
+  /* Dark theme = blueprint paper mode */
+  --background: var(--blueprint-deep);
+  --foreground: oklch(0.94 0.01 85);
+  --card: var(--blueprint);
+  --card-foreground: oklch(0.94 0.01 85);
+  --popover: var(--blueprint);
+  --popover-foreground: oklch(0.94 0.01 85);
+  --primary: var(--marker);
+  --primary-foreground: var(--blueprint-deep);
+  --secondary: oklch(0.28 0.08 260);
+  --secondary-foreground: oklch(0.94 0.01 85);
+  --muted: oklch(0.28 0.06 260);
+  --muted-foreground: oklch(0.75 0.02 260);
+  --accent: var(--tape);
+  --accent-foreground: var(--blueprint-deep);
+  --destructive: oklch(0.68 0.22 28);
+  --destructive-foreground: var(--paper);
+  --border: oklch(1 0 0 / 0.18);
+  --input: oklch(1 0 0 / 0.12);
+  --ring: var(--marker);
+
+  --sidebar: oklch(0.19 0.07 260);
+  --sidebar-foreground: oklch(0.94 0.01 85);
+  --sidebar-primary: var(--marker);
+  --sidebar-primary-foreground: var(--blueprint-deep);
+  --sidebar-accent: var(--blueprint);
+  --sidebar-accent-foreground: oklch(0.94 0.01 85);
+  --sidebar-border: oklch(1 0 0 / 0.15);
+  --sidebar-ring: var(--marker);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    letter-spacing: 0.005em;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+  ::selection {
+    background: var(--marker);
+    color: var(--paper);
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 3rem;
+      padding-right: 3rem;
+      max-width: 1360px;
+    }
+  }
+
+}
+
+
+/* ============================================================
+   TONY-OS · Terminal Cyberpunk
+   ------------------------------------------------------------
+   Scope    : .tonyos namespace only — does NOT touch Blueprint
+              Workshop styles above.
+   Palette  : pure black (#07080A), phosphor-green (#5BFE8F),
+              CRT amber (#FFB454), magenta hot (#FF4F8B),
+              terminal text (#C8D3D5), muted (#6A7783)
+   Fonts    : JetBrains Mono / IBM Plex Mono (mono),
+              Noto Sans TC (CJK body), VT323 (boot log accent)
+   Motifs   : terminal windows, traffic lights, scanlines,
+              ASCII borders, blinking cursor, command prompts
+   ============================================================ */
+
+.tonyos {
+  --tos-bg: #07080A;
+  --tos-bg-soft: #0E1116;
+  --tos-panel: #11151C;
+  --tos-panel-2: #161B23;
+  --tos-border: #1E232C;
+  --tos-border-strong: #2A313D;
+  --tos-phosphor: #5BFE8F;
+  --tos-phosphor-dim: #2F8C58;
+  --tos-amber: #FFB454;
+  --tos-magenta: #FF4F8B;
+  --tos-cyan: #5DD7FF;
+  --tos-text: #C8D3D5;
+  --tos-muted: #6A7783;
+  --tos-grid: rgba(91, 254, 143, 0.06);
+
+  background: var(--tos-bg);
+  color: var(--tos-text);
+  font-family: "JetBrains Mono", "IBM Plex Mono", "Noto Sans TC", ui-monospace, monospace;
+  font-feature-settings: "ss01", "ss02", "calt", "liga";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  min-height: 100vh;
+}
+
+.tonyos *,
+.tonyos *::before,
+.tonyos *::after {
+  border-color: var(--tos-border);
+}
+
+/* CRT scanlines (whole page subtle) */
+.tonyos-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+.tonyos-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* Soft phosphor grid background */
+.tonyos-bg-grid {
+  background-color: var(--tos-bg);
+  background-image:
+    linear-gradient(var(--tos-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tos-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+/* Window chrome (terminal pane) */
+.tos-window {
+  background: var(--tos-panel);
+  border: 1px solid var(--tos-border);
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px rgba(91, 254, 143, 0.04),
+    0 18px 48px -24px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px rgba(91, 254, 143, 0.02);
+  overflow: hidden;
+}
+
+.tos-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  background: linear-gradient(180deg, #1A2029 0%, #11151C 100%);
+  border-bottom: 1px solid var(--tos-border);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--tos-muted);
+  text-transform: uppercase;
+}
+
+.tos-traffic {
+  display: inline-flex;
+  gap: 6px;
+}
+.tos-traffic span {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+.tos-traffic .r { background: #FF5F57; }
+.tos-traffic .y { background: #FEBC2E; }
+.tos-traffic .g { background: #28C840; }
+
+.tos-tabs {
+  display: inline-flex;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.tos-tab {
+  padding: 4px 10px;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+  color: var(--tos-muted);
+  border: 1px solid transparent;
+}
+.tos-tab[data-active="true"] {
+  background: var(--tos-bg-soft);
+  color: var(--tos-phosphor);
+  border-color: var(--tos-border);
+  border-bottom-color: var(--tos-bg-soft);
+  text-shadow: 0 0 8px rgba(91, 254, 143, 0.4);
+}
+
+/* Cursor */
+.tos-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  background: var(--tos-phosphor);
+  vertical-align: -0.12em;
+  margin-left: 0.18em;
+  box-shadow: 0 0 6px rgba(91, 254, 143, 0.6);
+  animation: tos-blink 1.05s steps(2) infinite;
+}
+@keyframes tos-blink {
+  50% { opacity: 0; }
+}
+
+/* Phosphor / amber utility text */
+.tos-phosphor { color: var(--tos-phosphor); text-shadow: 0 0 10px rgba(91, 254, 143, 0.35); }
+.tos-amber    { color: var(--tos-amber);    text-shadow: 0 0 10px rgba(255, 180, 84, 0.3); }
+.tos-magenta  { color: var(--tos-magenta);  text-shadow: 0 0 10px rgba(255, 79, 139, 0.35); }
+.tos-cyan     { color: var(--tos-cyan);     text-shadow: 0 0 10px rgba(93, 215, 255, 0.35); }
+.tos-muted    { color: var(--tos-muted); }
+
+/* Headings: large mono, mixed with VT323 accent */
+.tos-h1 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.6vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--tos-phosphor);
+  text-shadow: 0 0 18px rgba(91, 254, 143, 0.35);
+}
+.tos-h2 {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  letter-spacing: -0.01em;
+  color: var(--tos-phosphor);
+}
+.tos-display-vt {
+  font-family: "VT323", "JetBrains Mono", monospace;
+  letter-spacing: 0.04em;
+}
+
+/* ASCII border helper */
+.tos-ascii-rule {
+  display: block;
+  color: var(--tos-phosphor-dim);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Command prompt (single line) */
+.tos-prompt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.92rem;
+}
+.tos-prompt .who { color: var(--tos-phosphor); }
+.tos-prompt .where { color: var(--tos-cyan); }
+.tos-prompt .dollar { color: var(--tos-amber); }
+.tos-prompt .cmd { color: var(--tos-text); }
+
+/* Boot log lines */
+.tos-bootline {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--tos-text);
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  animation: tos-fade-in 0.18s ease-out forwards;
+}
+.tos-ok { color: var(--tos-phosphor); }
+.tos-warn { color: var(--tos-amber); }
+.tos-err { color: var(--tos-magenta); }
+@keyframes tos-fade-in {
+  to { opacity: 1; }
+}
+
+/* Progress bar (skill meter) */
+.tos-bar {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.18em;
+  color: var(--tos-phosphor);
+  text-shadow: 0 0 6px rgba(91, 254, 143, 0.35);
+  white-space: nowrap;
+  font-size: 12px;
+}
+.tos-bar .dim { color: var(--tos-phosphor-dim); opacity: 0.4; text-shadow: none; letter-spacing: 0.18em; }
+.tos-bar .bracket { color: var(--tos-phosphor-dim); opacity: 0.7; letter-spacing: 0; margin: 0 4px; }
+
+/* Chip / tag */
+.tos-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--tos-border-strong);
+  background: rgba(91, 254, 143, 0.04);
+  color: var(--tos-phosphor);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+}
+.tos-chip.amber  { color: var(--tos-amber);   background: rgba(255, 180, 84, 0.05); }
+.tos-chip.mag    { color: var(--tos-magenta); background: rgba(255, 79, 139, 0.05); }
+.tos-chip.cyan   { color: var(--tos-cyan);    background: rgba(93, 215, 255, 0.05); }
+.tos-chip.muted  { color: var(--tos-muted);   background: rgba(255, 255, 255, 0.03); }
+
+/* Tree (file system) */
+.tos-tree {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--tos-text);
+}
+.tos-tree .branch { color: var(--tos-phosphor-dim); }
+.tos-tree .dir { color: var(--tos-cyan); }
+.tos-tree .file { color: var(--tos-text); }
+.tos-tree .active { color: var(--tos-phosphor); text-shadow: 0 0 8px rgba(91, 254, 143, 0.4); }
+
+/* Generic phosphor link */
+.tos-link {
+  color: var(--tos-phosphor);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(91, 254, 143, 0.4);
+  transition: all 0.18s ease;
+}
+.tos-link:hover {
+  color: var(--tos-amber);
+  border-bottom-color: var(--tos-amber);
+  text-shadow: 0 0 10px rgba(255, 180, 84, 0.4);
+}
+
+/* Buttons */
+.tos-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tos-bg);
+  background: var(--tos-phosphor);
+  border: 1px solid var(--tos-phosphor);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--tos-bg) inset, 0 0 18px rgba(91, 254, 143, 0.25);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.tos-btn:hover { background: var(--tos-amber); border-color: var(--tos-amber); box-shadow: 0 0 0 1px var(--tos-bg) inset, 0 0 20px rgba(255, 180, 84, 0.4); }
+.tos-btn-ghost {
+  background: transparent;
+  color: var(--tos-phosphor);
+  border: 1px solid var(--tos-border-strong);
+  box-shadow: none;
+}
+.tos-btn-ghost:hover { background: rgba(91, 254, 143, 0.08); border-color: var(--tos-phosphor); }
+
+/* Glitch hover for major titles */
+.tos-glitch {
+  position: relative;
+  display: inline-block;
+}
+.tos-glitch::before,
+.tos-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.7;
+  mix-blend-mode: screen;
+}
+.tos-glitch::before {
+  color: var(--tos-magenta);
+  transform: translate(2px, 0);
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+.tos-glitch::after {
+  color: var(--tos-cyan);
+  transform: translate(-2px, 0);
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+/* Side file tree panel */
+.tos-side {
+  background: var(--tos-bg-soft);
+  border-right: 1px solid var(--tos-border);
+}
+
+/* Status bar */
+.tos-statusbar {
+  background: linear-gradient(180deg, #0F141B 0%, #07080A 100%);
+  border-top: 1px solid var(--tos-border);
+  color: var(--tos-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tos-statusbar .pill {
+  padding: 2px 8px;
+  border: 1px solid var(--tos-border-strong);
+  border-radius: 2px;
+}
+.tos-statusbar .live::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--tos-phosphor);
+  margin-right: 6px;
+  vertical-align: 0.05em;
+  box-shadow: 0 0 8px rgba(91, 254, 143, 0.7);
+  animation: tos-pulse 1.6s ease-in-out infinite;
+}
+@keyframes tos-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Vignette overlay used for hero */
+.tos-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(91, 254, 143, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.85) 100%);
+}
+
+/* Subtle CRT flicker on hero text */
+.tos-flicker {
+  animation: tos-flick 4.6s infinite;
+}
+@keyframes tos-flick {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.78; }
+}
+
+/* Card: process window for projects */
+.tos-process {
+  background: var(--tos-panel);
+  border: 1px solid var(--tos-border);
+  border-radius: 4px;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.tos-process:hover {
+  transform: translateY(-2px);
+  border-color: var(--tos-phosphor-dim);
+  box-shadow: 0 14px 40px -20px rgba(91, 254, 143, 0.35);
+}
+
+/* Tag line in dashed phosphor */
+.tos-dashline {
+  height: 1px;
+  background-image: linear-gradient(to right, var(--tos-phosphor-dim) 50%, transparent 50%);
+  background-size: 8px 1px;
+  background-repeat: repeat-x;
+  opacity: 0.6;
+}
+
+/* keyframes for typewriter */
+@keyframes tos-type {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Smooth anchor scroll */
+html:has(.tonyos) {
+  scroll-behavior: smooth;
+}
+
+
+/* ============================================================
+ * TONY-OS · Responsive Hardening
+ * Goal: prevent horizontal overflow on small screens.
+ * ============================================================ */
+.tonyos { overflow-x: hidden; max-width: 100vw; }
+.tonyos *, .tonyos *::before, .tonyos *::after { min-width: 0; }
+.tonyos img, .tonyos svg, .tonyos video { max-width: 100%; height: auto; }
+
+/* Terminal window: allow horizontal scroll only inside the body, not the page */
+.tonyos .tos-window { max-width: 100%; }
+.tonyos .tos-window-bar { flex-wrap: wrap; gap: 8px; }
+
+/* Skill bar — stack label / progress on small screens */
+@media (max-width: 640px) {
+  .tonyos .skill-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .tonyos .skill-row > .skill-label { width: 100% !important; }
+  .tonyos .skill-row > .tos-bar { font-size: 11px; letter-spacing: 0.12em; }
+}
+
+/* Mobile drawer for FileExplorer */
+.tonyos-drawer {
+  position: fixed;
+  inset: 44px 0 0 0;
+  z-index: 50;
+  background: var(--tos-bg);
+  border-right: 1px solid var(--tos-border);
+  transform: translateX(-100%);
+  transition: transform 200ms ease;
+  width: min(320px, 88vw);
+  overflow-y: auto;
+}
+.tonyos-drawer[data-open="true"] { transform: translateX(0); }
+.tonyos-drawer-backdrop {
+  position: fixed; inset: 0; z-index: 49;
+  background: rgba(0,0,0,0.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.tonyos-drawer-backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+/* Long monospace strings inside section titles must wrap on small screens */
+.tonyos h1, .tonyos h2, .tonyos h3 { overflow-wrap: anywhere; word-break: break-word; }
+
+/* Chips/tags inside terminal cards: never push out parents */
+.tonyos .tos-chip { max-width: 100%; overflow-wrap: anywhere; }
+
+/* Statusbar: collapse less-important parts on tiny screens */
+@media (max-width: 480px) {
+  .tonyos .tos-statusbar { font-size: 10px; gap: 6px; padding-left: 10px; padding-right: 10px; }
+}
+
+
+/* ==========================================================================
+   TONY-OS · Final RWD Safety Net
+   ========================================================================== */
+.tonyos,
+.tonyos * {
+  box-sizing: border-box;
+}
+.tonyos {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+.tonyos img,
+.tonyos video,
+.tonyos canvas,
+.tonyos svg {
+  max-width: 100%;
+  height: auto;
+}
+.tonyos pre,
+.tonyos code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.tonyos .tos-window {
+  max-width: 100%;
+}
+.tonyos .tos-ascii-rule {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.tonyos .tos-h1 {
+  font-size: clamp(2.4rem, 14vw, 7rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.tonyos .tos-h2 {
+  font-size: clamp(1.4rem, 4.5vw, 2.5rem);
+  line-height: 1.15;
+}
+.tonyos .tos-display-vt {
+  word-break: break-word;
+}
+@media (max-width: 480px) {
+  .tonyos .tos-prompt {
+    font-size: 11px;
+  }
+  .tonyos .tos-statusbar {
+    font-size: 10px;
+  }
+  .tonyos .tos-tabs .tos-tab {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  .tonyos .skill-row .skill-label {
+    width: 100% !important;
+    flex-basis: 100% !important;
+  }
+  .tonyos .tos-bar {
+    font-size: 11px;
+  }
+}
