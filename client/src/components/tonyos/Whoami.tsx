@@ -5,8 +5,7 @@ const HERO_BG =
   "https://d2xsxph8kpxj0f.cloudfront.net/310519663501505652/CCMr2vKRyh3zVNi9U88g9S/tonyos_hero_crt-RXci3EU7KUhJd6ZMkoywKX.webp";
 // const AVATAR =
 //   "https://d2xsxph8kpxj0f.cloudfront.net/310519663501505652/CCMr2vKRyh3zVNi9U88g9S/tonyos_avatar_glyph-5THrm9YpUqJJePmG25WQNh.webp";
-const AVATAR =
-  "/public/images/messageImage_1777625932542.jpg";
+const AVATAR = "/images/messageImage_1777625932542.jpg";
 
 /**
  * `$ whoami` — Hero
