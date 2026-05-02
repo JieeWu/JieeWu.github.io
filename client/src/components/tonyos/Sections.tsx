@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Prompt, Section, AsciiRule, Chip, SkillBar, TerminalWindow } from "./primitives";
 import {
   TONY_ABOUT_PARAGRAPHS,
@@ -6,19 +7,42 @@ import {
   TONY_PROFILE,
   TONY_SKILLS,
 } from "@/lib/tonyData";
+import { useI18n } from "@/lib/i18n";
 
-const PANEL_BG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663501505652/CCMr2vKRyh3zVNi9U88g9S/tonyos_ascii_panel-fHeTv78EpnYu6wxAwAWjSs.webp";
+const PANEL_BG = "/images/tonyos_panel.webp";
 
 /* ===========================================================
    ABOUT — `cat about.md`
    =========================================================== */
 export function About() {
+  const { t } = useI18n();
+  const [visible, setVisible] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !triggered.current) {
+          triggered.current = true;
+          for (let i = 1; i <= TONY_ABOUT_PARAGRAPHS.length + 2; i++) {
+            setTimeout(() => setVisible(i), 180 * i);
+          }
+        }
+      },
+      { threshold: 0.15 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <Section id="about" className="px-4 sm:px-8 lg:px-16 py-14 sm:py-16 lg:py-20">
       <Prompt cmd="cat about.md" cursor className="mb-6" />
 
-      <div className="grid grid-cols-12 gap-6 lg:gap-8">
+      <div className="grid grid-cols-12 gap-6 lg:gap-8" ref={ref}>
         <div className="col-span-12 lg:col-span-8 min-w-0">
           <TerminalWindow
             tabs={["about.md", "intro.txt", "manifesto.md"]}
@@ -30,22 +54,35 @@ export function About() {
             }
           >
             <div className="p-4 sm:p-6 lg:p-8 space-y-5 font-[450]">
-              <div className="tos-display-vt text-2xl sm:text-3xl lg:text-4xl tos-phosphor break-words">
-                # 關於我 / TONY
+              <div
+                className="tos-display-vt text-2xl sm:text-3xl lg:text-4xl tos-phosphor break-words transition-all duration-500"
+                style={{ opacity: visible >= 1 ? 1 : 0, transform: visible >= 1 ? "translateY(0)" : "translateY(12px)" }}
+              >
+                # {t("關於我 / TONY", "About / TONY")}
               </div>
               <AsciiRule className="opacity-40" />
               {TONY_ABOUT_PARAGRAPHS.map((p, i) => (
                 <p
                   key={i}
-                  className="text-[14px] sm:text-[15px] leading-[1.95] text-[var(--tos-text)] break-words"
-                  style={{ fontFamily: "'Noto Sans TC', 'JetBrains Mono', monospace" }}
+                  className="text-[14px] sm:text-[15px] leading-[1.95] text-[var(--tos-text)] break-words transition-all duration-500"
+                  style={{
+                    fontFamily: "'Noto Sans TC', 'JetBrains Mono', monospace",
+                    opacity: visible >= i + 2 ? 1 : 0,
+                    transform: visible >= i + 2 ? "translateY(0)" : "translateY(12px)",
+                  }}
                 >
                   <span className="tos-phosphor mr-2">¶{String(i + 1).padStart(2, "0")}</span>
                   {p}
                 </p>
               ))}
               <AsciiRule className="opacity-40 mt-2" />
-              <div className="font-mono text-[12px] tos-muted">
+              <div
+                className="font-mono text-[12px] tos-muted transition-all duration-500"
+                style={{
+                  opacity: visible >= TONY_ABOUT_PARAGRAPHS.length + 2 ? 1 : 0,
+                  transform: visible >= TONY_ABOUT_PARAGRAPHS.length + 2 ? "translateY(0)" : "translateY(12px)",
+                }}
+              >
                 — END OF FILE — &nbsp;·&nbsp; bytes: {TONY_ABOUT_PARAGRAPHS.join("").length}
               </div>
             </div>
@@ -116,6 +153,7 @@ export function About() {
    SKILLS — `ls --skills`
    =========================================================== */
 export function Skills() {
+  const { t } = useI18n();
   return (
     <Section id="skills" className="relative px-4 sm:px-8 lg:px-16 py-16 sm:py-20 lg:py-24">
       <div
@@ -132,7 +170,7 @@ export function Skills() {
       <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
         <div>
           <div className="tos-h2">
-            技能組 <span className="tos-amber">/</span>{" "}
+            {t("技能組", "Skills")} <span className="tos-amber">/</span>{" "}
             <span className="tos-display-vt text-3xl">SKILL ATLAS</span>
           </div>
           <div className="tos-muted text-[12px] mt-2 tracking-[0.14em]">
@@ -178,15 +216,16 @@ export function Skills() {
    EXPERIENCE — `tree experience/`
    =========================================================== */
 export function Experience() {
+  const { t } = useI18n();
   return (
     <Section id="experience" className="px-4 sm:px-8 lg:px-16 py-16 sm:py-20 lg:py-24">
       <Prompt cmd="tree experience/ --depth=2" cursor className="mb-6" />
       <div className="tos-h2 mb-2">
-        工作經歷 <span className="tos-amber">/</span>{" "}
+        {t("工作經歷", "Experience")} <span className="tos-amber">/</span>{" "}
         <span className="tos-display-vt text-3xl">CAREER LOG</span>
       </div>
       <div className="tos-muted text-[12px] mb-10 tracking-[0.14em]">
-        // 由近到遠列出每段任務、實際 stack 與成果
+        // {t("由近到遠列出每段任務、實際 stack 與成果", "Recent-first — tasks, tech stack & outcomes")}
       </div>
 
       <TerminalWindow
@@ -245,17 +284,18 @@ export function Experience() {
    PROJECTS — `./projects --list`
    =========================================================== */
 export function Projects() {
+  const { t } = useI18n();
   return (
     <Section id="projects" className="relative px-4 sm:px-8 lg:px-16 py-16 sm:py-20 lg:py-24">
       <Prompt cmd="./projects --list --json" cursor className="mb-6" />
       <div className="flex items-end justify-between gap-6 flex-wrap mb-8">
         <div>
           <div className="tos-h2">
-            專案作品 <span className="tos-amber">/</span>{" "}
+            {t("專案作品", "Projects")} <span className="tos-amber">/</span>{" "}
             <span className="tos-display-vt text-3xl">RUNNING PROCESSES</span>
           </div>
           <div className="tos-muted text-[12px] mt-2 tracking-[0.14em]">
-            // 每個專案都是一支正在跑的 process — PID / cmd / status / stack
+            // {t("每個專案都是一支正在跑的 process — PID / cmd / status / stack", "Each project is a running process — PID / cmd / status / stack")}
           </div>
         </div>
         <div className="flex gap-2">
@@ -334,6 +374,20 @@ export function Projects() {
                   ))}
                 </div>
                 <div className="tos-dashline my-3" />
+                {p.repo && (
+                  <>
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-1.5 font-mono text-[11px] tos-phosphor hover:text-[var(--tos-amber)] transition-colors mb-2"
+                    >
+                      <span>$ git clone</span>
+                      <span className="tos-cyan truncate">{p.repo.replace("https://github.com/", "")}</span>
+                    </a>
+                    <div className="tos-dashline my-3" />
+                  </>
+                )}
                 <div className="font-mono text-[10px] tos-muted">
                   $ ps -p {p.pid} -o status
                 </div>
@@ -402,6 +456,7 @@ export function CertsAndLangs() {
    CONTACT — `ssh tony@workshop`
    =========================================================== */
 export function Contact() {
+  const { t } = useI18n();
   return (
     <Section id="contact" className="px-4 sm:px-8 lg:px-16 py-16 sm:py-20 lg:py-24">
       <Prompt cmd="ssh tony@workshop -p 22" cursor className="mb-6" />
@@ -412,7 +467,10 @@ export function Contact() {
             $ Welcome to TONY-OS.
           </div>
           <div className="font-mono text-[14px] tos-muted mt-2">
-            // 連線成功 · 接受合作邀請、技術交流、咖啡 ☕
+            // {t(
+              "連線成功 · 接受合作邀請、技術交流、咖啡",
+              "Connected · Open to collaboration, tech talks & coffee"
+            )} ☕
           </div>
 
           <AsciiRule className="my-6 opacity-40" />
@@ -437,20 +495,47 @@ export function Contact() {
             />
           </div>
 
+          {/* Resume download */}
+          <div className="mt-6">
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="tos-btn inline-flex items-center gap-2"
+            >
+              <span>$ wget resume.pdf</span>
+            </a>
+            <span className="font-mono text-[11px] tos-muted ml-3">
+              // {t("下載我的履歷", "Download my resume")}
+            </span>
+          </div>
+
           <AsciiRule className="my-8 opacity-40" />
 
           <div className="grid md:grid-cols-3 gap-6 font-mono text-[13px]">
             <div>
-              <div className="tos-amber text-[11px] tracking-[0.18em]">承接類型</div>
-              <div className="text-[var(--tos-text)] mt-1">前端 / 全端 / 系統整合</div>
+              <div className="tos-amber text-[11px] tracking-[0.18em]">
+                {t("承接類型", "Service Type")}
+              </div>
+              <div className="text-[var(--tos-text)] mt-1">
+                {t("前端 / 全端 / 系統整合", "Frontend / Fullstack / Integration")}
+              </div>
             </div>
             <div>
-              <div className="tos-amber text-[11px] tracking-[0.18em]">工作模式</div>
-              <div className="text-[var(--tos-text)] mt-1">遠距 / 駐點皆可</div>
+              <div className="tos-amber text-[11px] tracking-[0.18em]">
+                {t("工作模式", "Work Mode")}
+              </div>
+              <div className="text-[var(--tos-text)] mt-1">
+                {t("遠距 / 駐點皆可", "Remote / On-site")}
+              </div>
             </div>
             <div>
-              <div className="tos-amber text-[11px] tracking-[0.18em]">回覆時間</div>
-              <div className="text-[var(--tos-text)] mt-1">24hr 內</div>
+              <div className="tos-amber text-[11px] tracking-[0.18em]">
+                {t("回覆時間", "Response Time")}
+              </div>
+              <div className="text-[var(--tos-text)] mt-1">
+                {t("24hr 內", "Within 24hr")}
+              </div>
             </div>
           </div>
 

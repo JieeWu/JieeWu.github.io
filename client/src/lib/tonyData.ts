@@ -128,6 +128,7 @@ export type ProjectItem = {
   role: string;
   bullets: string[];
   stack: string[];
+  repo?: string;
 };
 
 export const TONY_PROJECTS: ProjectItem[] = [
@@ -146,6 +147,7 @@ export const TONY_PROJECTS: ProjectItem[] = [
       "Prisma 設計 PostgreSQL 資料模型，建立 19 個 Model（User、Arena、Vote、Comment、Friendship、Message、Reward、Coupon、Badge、PointsHistory…）",
       "實作 JWT / OAuth 認證、投票唯一限制、留言／最佳解答、積分獎勵、通知偏好、檢舉回報等社群常見功能",
     ],
+    repo: "https://github.com/JieeWu/bicker-ui",
     stack: [
       "React Native",
       "Expo",
@@ -204,6 +206,7 @@ export const TONY_PROJECTS: ProjectItem[] = [
       "透過 NGROK 將本地伺服器公開、搭配 socket.io 廣播事件",
       "達成所有使用者線上即時聊天的功能",
     ],
+    repo: "https://github.com/JieeWu/bookCampfinally",
     stack: ["Next.js 13", "React", "Redux Toolkit", "Express", "MySQL", "Socket.io", "Firebase", "Bootstrap", "JWT", "ECPay"],
   },
   {

@@ -1,10 +1,8 @@
 import { Prompt, Section, AsciiRule, Chip } from "./primitives";
 import { TONY_PROFILE } from "@/lib/tonyData";
+import { useI18n } from "@/lib/i18n";
 
-const HERO_BG =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663501505652/CCMr2vKRyh3zVNi9U88g9S/tonyos_hero_crt-RXci3EU7KUhJd6ZMkoywKX.webp";
-// const AVATAR =
-//   "https://d2xsxph8kpxj0f.cloudfront.net/310519663501505652/CCMr2vKRyh3zVNi9U88g9S/tonyos_avatar_glyph-5THrm9YpUqJJePmG25WQNh.webp";
+const HERO_BG = "/images/tonyos_hero.webp";
 const AVATAR = "/images/messageImage_1777625932542.jpg";
 
 /**
@@ -12,6 +10,7 @@ const AVATAR = "/images/messageImage_1777625932542.jpg";
  * Big mono name + role + status + key tags, with CRT background image.
  */
 export default function Whoami() {
+  const { t } = useI18n();
   return (
     <Section id="whoami" className="relative">
       {/* CRT background */}
@@ -47,7 +46,11 @@ export default function Whoami() {
             </div>
 
             <p className="mt-5 sm:mt-6 max-w-xl text-[14px] sm:text-[15px] leading-7 text-[var(--tos-text)]/90">
-              <span className="tos-phosphor">&gt;</span> {TONY_PROFILE.intro}
+              <span className="tos-phosphor">&gt;</span>{" "}
+              {t(
+                TONY_PROFILE.intro,
+                "From frontend layouts to backend APIs, databases to deployment — I chase every problem to its root before delivering."
+              )}
               <br />
               <span className="tos-muted">
                 #&nbsp;Frontend → Fullstack · Vue / React · NestJS / Spring Boot

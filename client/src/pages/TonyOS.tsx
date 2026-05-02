@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import BootSplash from "@/components/tonyos/BootSplash";
 import FileExplorer from "@/components/tonyos/FileExplorer";
 import Whoami from "@/components/tonyos/Whoami";
@@ -10,13 +10,24 @@ import {
   CertsAndLangs,
   Contact,
 } from "@/components/tonyos/Sections";
-import { Link } from "wouter";
-import { ChevronLeft, Wifi, BatteryFull, Menu, X } from "lucide-react";
+import InteractiveTerminal from "@/components/tonyos/InteractiveTerminal";
+import { I18nProvider, useI18n } from "@/lib/i18n";
+import { NAV_SECTIONS } from "@/lib/tonyData";
+import { Wifi, BatteryFull, Menu, X, Globe } from "lucide-react";
 
 export default function TonyOS() {
+  return (
+    <I18nProvider>
+      <TonyOSInner />
+    </I18nProvider>
+  );
+}
+
+function TonyOSInner() {
   const [booted, setBooted] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [clock, setClock] = useState<string>(() => formatClock(new Date()));
+  const { locale, toggle: toggleLang } = useI18n();
 
   useEffect(() => {
     document.documentElement.classList.add("dark");
@@ -42,6 +53,21 @@ export default function TonyOS() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+
+  // Keyboard shortcuts: 1-7 jump to sections
+  const onKeyNav = useCallback((e: KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    const n = parseInt(e.key);
+    if (n >= 1 && n <= NAV_SECTIONS.length) {
+      e.preventDefault();
+      document.getElementById(NAV_SECTIONS[n - 1].id)?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyNav);
+    return () => window.removeEventListener("keydown", onKeyNav);
+  }, [onKeyNav]);
 
   return (
     <div className="tonyos relative min-h-screen tonyos-bg-grid">
@@ -78,14 +104,15 @@ export default function TonyOS() {
           80×24 · UTF-8 · NO MOUSE NEEDED
         </span>
         <div className="ml-auto flex items-center gap-2 sm:gap-3 font-mono text-[11px] tos-muted">
-          <Link
-            href="/"
-            className="tos-link !border-b-0 !text-[var(--tos-amber)] hover:!text-[var(--tos-phosphor)] flex items-center gap-1 whitespace-nowrap"
+          <button
+            type="button"
+            onClick={toggleLang}
+            className="flex items-center gap-1 whitespace-nowrap text-[var(--tos-amber)] hover:text-[var(--tos-phosphor)] transition-colors"
+            title="Switch language"
           >
-            <ChevronLeft size={12} />
-            <span className="hidden sm:inline">切換到 v1 · 藍圖工坊</span>
-            <span className="sm:hidden">v1</span>
-          </Link>
+            <Globe size={12} />
+            <span>{locale === "zh" ? "EN" : "中文"}</span>
+          </button>
           <span className="hidden md:inline tos-muted">|</span>
           <span className="hidden md:inline-flex items-center gap-1">
             <Wifi size={12} className="tos-phosphor" /> linked
@@ -130,6 +157,11 @@ export default function TonyOS() {
           <Projects />
           <CertsAndLangs />
           <Contact />
+
+          {/* Interactive Terminal */}
+          <section className="px-4 sm:px-8 lg:px-16 py-10">
+            <InteractiveTerminal />
+          </section>
 
           {/* Footer terminal */}
           <footer className="px-4 sm:px-8 lg:px-16 pb-16 pt-10">
