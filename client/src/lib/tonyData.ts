@@ -204,7 +204,7 @@ export const TONY_PROJECTS: ProjectItem[] = [
       "透過 NGROK 將本地伺服器公開、搭配 socket.io 廣播事件",
       "達成所有使用者線上即時聊天的功能",
     ],
-    stack: ["Node.js", "socket.io", "NGROK", "REST API"],
+    stack: ["Next.js 13", "React", "Redux Toolkit", "Express", "MySQL", "Socket.io", "Firebase", "Bootstrap", "JWT", "ECPay"],
   },
   {
     pid: "0004",
