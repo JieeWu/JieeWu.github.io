@@ -14,9 +14,9 @@ export const TONY_PROFILE = {
   status: "ONLINE — open to fullstack roles",
   intro:
     "從前端切版到後端 API、資料庫到部署維運，把問題追到底再交付的人。",
-  email: "tony@example.com",
-  github: "github.com/tony-wu",
-  line: "@tony.wu",
+  email: "wujia51819@gmail.com",
+  github: "github.com/JieeWu",
+  line: "wujia0227",
   certs: ["TQC ／ EEC", "TQC-OA ／ 中文輸入"],
   langs: [
     { name: "中文", level: "聽 / 說 / 讀 / 寫 — 精通", percent: 100 },
